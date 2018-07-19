@@ -1,89 +1,81 @@
-# epics_ioclogserver
+This Puppet module installs and configures an EPICS IOC log server. The log
+server is run as a system service. Currently only systemd is supported as init
+system (e.g. Debian >=8).
 
-#### Table of Contents
+# Environment Variables
 
-1. [Description](#description)
-1. [Setup - The basics of getting started with epics_ioclogserver](#setup)
-    * [What epics_ioclogserver affects](#what-epics_ioclogserver-affects)
-    * [Setup requirements](#setup-requirements)
-    * [Beginning with epics_ioclogserver](#beginning-with-epics_ioclogserver)
-1. [Usage - Configuration options and additional functionality](#usage)
-1. [Reference - An under-the-hood peek at what the module is doing and how](#reference)
-1. [Limitations - OS compatibility, etc.](#limitations)
-1. [Development - Guide for contributing to the module](#development)
+Some attributes of the `Epics_ioclogserver::logserver` class cause environment
+variables to be set. Please refer to the following table for a list:
 
-## Description
+| Attribute | Environment Variable      |
+|-----------|---------------------------|
+| `logfile` | `EPICS_IOC_LOG_FILE_NAME` |
+| `port`    | `EPICS_IOC_LOG_PORT`      |
 
-Start with a one- or two-sentence summary of what the module does and/or what
-problem it solves. This is your 30-second elevator pitch for your module.
-Consider including OS/Puppet version it works with.
+# Example
 
-You can give more descriptive information in a second paragraph. This paragraph
-should answer the questions: "What does this module *do*?" and "Why would I use
-it?" If your module has a range of functionality (installation, configuration,
-management, etc.), this is the time to mention it.
+```
+  include 'epics_ioclogserver'
 
-## Setup
+  epics_ioclogserver::logserver { 'vacuum':
+    ensure  => running,
+    enable  => true,
+    logfile => '/var/log/iocLogServer-vacuum.log',
+  }
+```
 
-### What epics_ioclogserver affects **OPTIONAL**
+# Reference
 
-If it's obvious what your module touches, you can skip this section. For
-example, folks can probably figure out that your mysql_instance module affects
-their MySQL instances.
+## Class `epics_ioclogserver`
 
-If there's more that they should know about, though, this is the place to mention:
+This class takes care of all global task which are needed in order to run an IOC
+log server. It installs the needed packages.
 
-* A list of files, packages, services, or operations that the module will alter,
-  impact, or execute.
-* Dependencies that your module automatically installs.
-* Warnings or other important notices.
+## Defined Type `epics_ioclogserver::logserver`
 
-### Setup Requirements **OPTIONAL**
+This type manages an EPICS IOC log server instance. The instance gets configured
+and registered as a system service.
 
-If your module requires anything extra before setting up (pluginsync enabled,
-etc.), mention it here.
+### `ensure`
 
-If your most recent release breaks compatibility or requires particular steps
-for upgrading, you might want to include an additional "Upgrading" section
-here.
+Ensures the IOC log server service is running/stopped. Valid values are
+`running`, `stopped`, and <undefined>. If not specified Puppet will not
+start/stop the IOC service.
 
-### Beginning with epics_ioclogserver
+### `enable`
 
-The very basic steps needed for a user to get the module up and running. This
-can include setup steps, if necessary, or it can be an example of the most
-basic use of the module.
+Whether the IOC log server service should be enabled to start at boot. Valid
+values are `true`, `false`, and <undefined>. If not specified (undefined) Puppet
+will not start/stop the IOC service.
 
-## Usage
+### `logfile`
 
-This section is where you describe how to customize, configure, and do the
-fancy stuff with your module here. It's especially helpful if you include usage
-examples and code samples for doing things with your module.
+Allows to configure the `EPICS_IOC_LOG_FILE_NAME` environment variable for the IOC
+log server.
 
-## Reference
+### `port`
 
-Users need a complete list of your module's classes, types, defined types providers, facts, and functions, along with the parameters for each. You can provide this list either via Puppet Strings code comments or as a complete list in this Reference section.
+Allows to configure the `EPICS_IOC_LOG_PORT` environment variable for the IOC
+log server. The default is 7004 (the default port used by iocLogServer).
 
-* If you are using Puppet Strings code comments, this Reference section should include Strings information so that your users know how to access your documentation.
+### `systemd_after`
 
-* If you are not using Puppet Strings, include a list of all of your classes, defined types, and so on, along with their parameters. Each element in this listing should include:
+Ensures the IOC log server service is started after the specified `systemd`
+units have been activated. Please specify an array of strings. Default:
+`network.target`.
 
-  * The data type, if applicable.
-  * A description of what the element does.
-  * Valid values, if the data type doesn't make it obvious.
-  * Default value, if any.
+Note: This enforces only the correct order. It does not cause the specified
+targets to be activated. Also see `systemd_requires`.
 
-## Limitations
+### `systemd_requires`
 
-This is where you list OS compatibility, version compatibility, etc. If there
-are Known Issues, you might want to include them under their own heading here.
+Ensures the specified `systemd` units are activated when this IOC log server is
+started. Default: `network.target`.
 
-## Development
+Note: This only ensures that the required services are started. That generally
+means that `systemd` starts them in parallel to the IOC log server service.
+Please use `systemd_after` to ensure they are started before the IOC is started.
 
-Since your module is awesome, other users will want to play with it. Let them
-know what the ground rules for contributing are.
+# Contact
 
-## Release Notes/Contributors/Etc. **Optional**
-
-If you aren't using changelog, put your release notes here (though you should
-consider using changelog). You can also add any additional sections you feel
-are necessary or important to include here. Please use the `## ` header.
+Author: Martin Konrad <konrad at frib.msu.edu>
