@@ -53,7 +53,7 @@ main class directly.
 
 This type manages an EPICS IOC log server instance. The instance gets configured
 and registered as a system service. This type automatically includes
-`epics_ioclogserver::logserver`.
+`epics_ioclogserver`.
 
 ### `ensure`
 
