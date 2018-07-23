@@ -15,8 +15,6 @@ variables to be set. Please refer to the following table for a list:
 # Example
 
 ```
-  include 'epics_ioclogserver'
-
   epics_ioclogserver::logserver { 'vacuum':
     ensure  => running,
     enable  => true,
@@ -29,12 +27,14 @@ variables to be set. Please refer to the following table for a list:
 ## Class `epics_ioclogserver`
 
 This class takes care of all global task which are needed in order to run an IOC
-log server. It installs the needed packages.
+log server. It installs the needed packages. You generally don't need to use the
+main class directly.
 
 ## Defined Type `epics_ioclogserver::logserver`
 
 This type manages an EPICS IOC log server instance. The instance gets configured
-and registered as a system service.
+and registered as a system service. This type automatically includes
+`epics_ioclogserver::logserver`.
 
 ### `ensure`
 

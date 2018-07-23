@@ -10,6 +10,8 @@ define epics_ioclogserver::logserver(
   String                               $username         = "ioclog-${name}",
 )
 {
+  include 'epics_ioclogserver'
+
   systemd::unit_file { "iocLogServer-${name}.service":
     content => template("${module_name}/etc/systemd/system/iocLogServer.service"),
     notify  => Service["iocLogServer-${name}"],
