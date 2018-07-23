@@ -32,7 +32,7 @@ define epics_ioclogserver::logserver(
     hasstatus  => true,
     provider   => 'systemd',
     require    => [
-      Class['epics_ioclogserver::init'],
+      Class['epics_ioclogserver'],
       Class['systemd::systemctl::daemon_reload'],
     ],
   }
