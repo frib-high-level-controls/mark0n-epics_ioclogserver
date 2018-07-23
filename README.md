@@ -14,12 +14,31 @@ variables to be set. Please refer to the following table for a list:
 
 # Example
 
+## Simple
+
 ```
-  epics_ioclogserver::logserver { 'vacuum':
-    ensure  => running,
-    enable  => true,
-    logfile => '/var/log/iocLogServer-vacuum.log',
-  }
+epics_ioclogserver::logserver { 'vacuum':
+  ensure  => running,
+  enable  => true,
+  logfile => '/var/log/iocLogServer-vacuum.log',
+}
+```
+
+## User managed externally
+
+```
+user { 'cryologger':
+  ensure => present,
+}
+
+epics_ioclogserver::logserver { 'cryo':
+  ensure      => running,
+  enable      => true,
+  logfile     => '/var/log/iocLogServer-cryo.log',
+  manage_user => false,
+  username    => 'cryologger',
+  require     => User['cryologger'],
+}
 ```
 
 # Reference
