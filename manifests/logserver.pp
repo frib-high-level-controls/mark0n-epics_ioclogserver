@@ -4,9 +4,11 @@ define epics_ioclogserver::logserver(
   Optional[Enum['running', 'stopped']] $ensure           = undef,
   Optional[Boolean]                    $enable           = undef,
   String                               $logfile,
+  Boolean                              $manage_user      = true,
   Integer[1, 65535]                    $port             = 7004,
   Array[String]                        $systemd_after    = [ 'network.target' ],
   Array[String]                        $systemd_requires = [ 'network.target' ],
+  Optional[Integer]                    $uid              = undef,
   String                               $username         = "ioclog-${name}",
 )
 {
@@ -15,6 +17,16 @@ define epics_ioclogserver::logserver(
   systemd::unit_file { "iocLogServer-${name}.service":
     content => template("${module_name}/etc/systemd/system/iocLogServer.service"),
     notify  => Service["iocLogServer-${name}"],
+  }
+
+  if $manage_user {
+    user { $username:
+      comment => "${name} IOC",
+      home    => "/epics/iocs/${name}",
+      groups  => 'ioclogserver',
+      uid     => $uid,
+      before  => Service["iocLogServer-${name}"],
+    }
   }
 
   logrotate::rule { "iocLogServer-${name}":
