@@ -4,7 +4,7 @@
 class epics_ioclogserver(
   Optional[Integer] $gid = undef,
 ) {
-  package { 'epics-dev':
+  package { 'ioclogserver':
     ensure => latest,
   }
 
