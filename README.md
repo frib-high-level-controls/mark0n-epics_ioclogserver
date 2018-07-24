@@ -20,11 +20,25 @@ variables to be set. Please refer to the following table for a list:
 epics_ioclogserver::logserver { 'vacuum':
   ensure  => running,
   enable  => true,
-  logfile => '/var/log/iocLogServer-vacuum.log',
 }
 ```
 
-## User managed externally
+## Specify Log File
+
+```
+epics_ioclogserver::logserver { 'klystron':
+  ensure             => running,
+  enable             => true,
+  port               => 7005,
+  logfile            => 'klystron.log',
+  logpath            => '/var/log/rf',
+  username           => 'rflogger',
+  logrotate_size     => '200M',
+  logrotate_compress => false,
+}
+```
+
+## User Managed Externally
 
 ```
 user { 'cryologger':
@@ -34,7 +48,7 @@ user { 'cryologger':
 epics_ioclogserver::logserver { 'cryo':
   ensure      => running,
   enable      => true,
-  logfile     => '/var/log/iocLogServer-cryo.log',
+  port        => 7006,
   manage_user => false,
   username    => 'cryologger',
   require     => User['cryologger'],
