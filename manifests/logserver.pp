@@ -3,7 +3,8 @@
 define epics_ioclogserver::logserver(
   Optional[Enum['running', 'stopped']] $ensure             = undef,
   Optional[Boolean]                    $enable             = undef,
-  String                               $logfile,
+  String                               $logfile            = "${name}.log",
+  String                               $logpath            = "/var/log/iocLogServer-${name}",
   Boolean                              $logrotate_compress = true,
   Integer                              $logrotate_rotate   = 30,
   String                               $logrotate_size     = '100M',
@@ -32,8 +33,15 @@ define epics_ioclogserver::logserver(
     }
   }
 
+  file { $logpath:
+    ensure => directory,
+    owner  => $username,
+    group  => 'ioclogserver',
+    mode   => '2755',
+  }
+
   logrotate::rule { "iocLogServer-${name}":
-    path         => "/var/log/iocLogServer-${name}.log",
+    path         => "${logpath}/${logfile}",
     rotate_every => 'day',
     compress     => $logrotate_compress,
     rotate       => $logrotate_rotate,
@@ -52,6 +60,7 @@ define epics_ioclogserver::logserver(
     require    => [
       Class['epics_ioclogserver'],
       Class['systemd::systemctl::daemon_reload'],
+      File[$logpath],
     ],
   }
 }

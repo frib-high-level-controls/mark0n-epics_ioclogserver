@@ -4,7 +4,7 @@ Requires=<%= @systemd_requires.join(' ') %>
 After=<%= @systemd_after.join(' ') %>
 
 [Service]
-Environment="EPICS_IOC_LOG_FILE_NAME=<%= @logfile %>"
+Environment="EPICS_IOC_LOG_FILE_NAME=<%= @logpath %>/<%= @logfile %>"
 Environment="EPICS_IOC_LOG_PORT=<%= @port %>"
 ExecStart=/usr/bin/iocLogServer
 Restart=always

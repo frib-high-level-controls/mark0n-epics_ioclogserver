@@ -69,8 +69,14 @@ will not start/stop the IOC service.
 
 ### `logfile`
 
-Allows to configure the `EPICS_IOC_LOG_FILE_NAME` environment variable for the IOC
-log server.
+File to save log data to. `logpath`/`logfile` is passed to the IOC log server
+process in the `EPICS_IOC_LOG_FILE_NAME` environment variable. Defaults to
+`<logServerName>.log`.
+
+### `logpath`
+
+Directory to save log file to. This goes together with the `logfile` argument.
+Defaults to `/var/log/iocLogServer`.
 
 ### `logrotate_compress`
 
