@@ -72,6 +72,18 @@ will not start/stop the IOC service.
 Allows to configure the `EPICS_IOC_LOG_FILE_NAME` environment variable for the IOC
 log server.
 
+### `logrotate_compress`
+
+Whether to compress the log file when rotating it. Defaults to `true`.
+
+### `logrotate_rotate`
+
+The time in days after which a the log file will be rotated. Default is `30`.
+
+### `logrotate_size`
+
+If the log file reaches this size the log will be rotated. Default is `'100M'`.
+
 ### `port`
 
 Allows to configure the `EPICS_IOC_LOG_PORT` environment variable for the IOC

@@ -1,15 +1,18 @@
 # This type manages an instance of the IOC log server.
 #
 define epics_ioclogserver::logserver(
-  Optional[Enum['running', 'stopped']] $ensure           = undef,
-  Optional[Boolean]                    $enable           = undef,
+  Optional[Enum['running', 'stopped']] $ensure             = undef,
+  Optional[Boolean]                    $enable             = undef,
   String                               $logfile,
-  Boolean                              $manage_user      = true,
-  Integer[1, 65535]                    $port             = 7004,
-  Array[String]                        $systemd_after    = [ 'network.target' ],
-  Array[String]                        $systemd_requires = [ 'network.target' ],
-  Optional[Integer]                    $uid              = undef,
-  String                               $username         = "ioclog-${name}",
+  Boolean                              $logrotate_compress = true,
+  Integer                              $logrotate_rotate   = 30,
+  String                               $logrotate_size     = '100M',
+  Boolean                              $manage_user        = true,
+  Integer[1, 65535]                    $port               = 7004,
+  Array[String]                        $systemd_after      = [ 'network.target' ],
+  Array[String]                        $systemd_requires   = [ 'network.target' ],
+  Optional[Integer]                    $uid                = undef,
+  String                               $username           = "ioclog-${name}",
 )
 {
   include 'epics_ioclogserver'
@@ -32,8 +35,9 @@ define epics_ioclogserver::logserver(
   logrotate::rule { "iocLogServer-${name}":
     path         => "/var/log/iocLogServer-${name}.log",
     rotate_every => 'day',
-    rotate       => 30,
-    size         => '100M',
+    compress     => $logrotate_compress,
+    rotate       => $logrotate_rotate,
+    size         => $logrotate_size,
     missingok    => true,
     ifempty      => false,
     postrotate   => "/bin/systemctl kill --signal=HUP --kill-who=main iocLogServer-${name}.service",
