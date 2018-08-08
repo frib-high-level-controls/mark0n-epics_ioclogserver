@@ -7,10 +7,11 @@ system (e.g. Debian >=8).
 Some attributes of the `Epics_ioclogserver::logserver` class cause environment
 variables to be set. Please refer to the following table for a list:
 
-| Attribute | Environment Variable      |
-|-----------|---------------------------|
-| `logfile` | `EPICS_IOC_LOG_FILE_NAME` |
-| `port`    | `EPICS_IOC_LOG_PORT`      |
+| Attribute    | Environment Variable       |
+|--------------|----------------------------|
+| `logfile`    | `EPICS_IOC_LOG_FILE_NAME`  |
+| `port`       | `EPICS_IOC_LOG_PORT`       |
+| `file_limit` | `EPICS_IOC_LOG_FILE_LIMIT` |
 
 # Example
 
@@ -80,6 +81,11 @@ start/stop the IOC service.
 Whether the IOC log server service should be enabled to start at boot. Valid
 values are `true`, `false`, and <undefined>. If not specified (undefined) Puppet
 will not start/stop the IOC service.
+
+### `file_limit`
+
+Maximum size of the log file. Valid values are between 0 (no limit) and
+2,147,483,647 (2 GiB). Defaults to `0`.
 
 ### `logfile`
 

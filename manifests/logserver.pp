@@ -3,6 +3,7 @@
 define epics_ioclogserver::logserver(
   Optional[Enum['running', 'stopped']] $ensure             = undef,
   Optional[Boolean]                    $enable             = undef,
+  Integer[0, 2147483647]               $file_limit         = 0,
   String                               $logfile            = "${name}.log",
   String                               $logpath            = "/var/log/iocLogServer-${name}",
   Boolean                              $logrotate_compress = true,
